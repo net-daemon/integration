@@ -2,15 +2,28 @@
 import asyncio
 from typing import TYPE_CHECKING
 
-from homeassistant.exceptions import ConfigEntryNotReady
-
-from .const import DOMAIN, ATTR_CLASS, ATTR_METHOD, LOGGER, PLATFORMS
+from .api import NetDaemonApi
 from .client import NetDaemonClient
-
+from .const import (
+    ATTR_CLASS,
+    ATTR_ENTITY_ID,
+    ATTR_METHOD,
+    DEFAULT_CLASS,
+    DEFAULT_METHOD,
+    DOMAIN,
+    LOGGER,
+    PLATFORMS,
+    SERVICE_ENTITY_CREATE,
+    SERVICE_ENTITY_REMOVE,
+    SERVICE_ENTITY_UPDATE,
+    SERVICE_REGISTER_SERVICE,
+    SERVICE_RELOAD_APPS,
+    STARTUP,
+)
 
 if TYPE_CHECKING:
-    from homeassistant.core import HomeAssistant
     from homeassistant.config_entries import ConfigEntry
+    from homeassistant.core import HomeAssistant
 
 
 async def async_setup(_hass: "HomeAssistant", _config: dict) -> bool:
@@ -20,6 +33,7 @@ async def async_setup(_hass: "HomeAssistant", _config: dict) -> bool:
 
 async def async_setup_entry(hass: "HomeAssistant", config_entry: "ConfigEntry") -> bool:
     """Set up this integration using UI."""
+    LOGGER.info(STARTUP)
     client = NetDaemonClient(hass)
     hass.data[DOMAIN] = client
 
@@ -29,8 +43,8 @@ async def async_setup_entry(hass: "HomeAssistant", config_entry: "ConfigEntry") 
     # Services
     async def handle_register_service(call):
         """Register custom services."""
-        daemon_class = call.data.get(ATTR_CLASS, "no class provided")
-        daemon_method = call.data.get(ATTR_METHOD, "no method provided")
+        daemon_class = call.data.get(ATTR_CLASS, DEFAULT_CLASS)
+        daemon_method = call.data.get(ATTR_METHOD, DEFAULT_METHOD)
 
         LOGGER.info("Register service %s_%s", daemon_class, daemon_method)
         hass.services.async_register(
@@ -42,12 +56,14 @@ async def async_setup_entry(hass: "HomeAssistant", config_entry: "ConfigEntry") 
 
     async def entity_create(call):
         """Create an entity."""
-        entity_id = call.data.get("entity_id")
+        entity_id = call.data.get(ATTR_ENTITY_ID)
         if not entity_id:
-            LOGGER.error("No 'entity_id' for service entity_create")
+            LOGGER.error("No 'entity_id' for service %s", SERVICE_ENTITY_CREATE)
         if "." not in entity_id:
             LOGGER.error(
-                "%s is not a valid entity ID for service entity_create", entity_id
+                "%s is not a valid entity ID for service %s",
+                entity_id,
+                SERVICE_ENTITY_CREATE,
             )
         if entity_id.split(".")[0] not in PLATFORMS:
             LOGGER.error(
@@ -61,18 +77,21 @@ async def async_setup_entry(hass: "HomeAssistant", config_entry: "ConfigEntry") 
 
     async def entity_update(call):
         """Create an entity."""
-        entity_id = call.data.get("entity_id")
+        entity_id = call.data.get(ATTR_ENTITY_ID)
         if not entity_id:
-            LOGGER.error("No 'entity_id' for service entity_create")
+            LOGGER.error("No 'entity_id' for service %s", SERVICE_ENTITY_UPDATE)
         if "." not in entity_id:
             LOGGER.error(
-                "%s is not a valid entity ID for service entity_create", entity_id
+                "%s is not a valid entity ID for service %s",
+                entity_id,
+                SERVICE_ENTITY_UPDATE,
             )
         if entity_id.split(".")[0] not in PLATFORMS:
             LOGGER.error(
-                "%s is not a valid platform (%s) for service entity_create",
+                "%s is not a valid platform (%s) for service %s",
                 entity_id.split(".")[0],
                 PLATFORMS,
+                SERVICE_ENTITY_UPDATE,
             )
 
         if await client.entity_update(call.data):
@@ -80,26 +99,31 @@ async def async_setup_entry(hass: "HomeAssistant", config_entry: "ConfigEntry") 
 
     async def entity_remove(call):
         """Create an entity."""
-        entity_id = call.data.get("entity_id")
+        entity_id = call.data.get(ATTR_ENTITY_ID)
         if not entity_id:
-            LOGGER.error("No 'entity_id' for service entity_create")
+            LOGGER.error("No 'entity_id' for service %s", SERVICE_ENTITY_REMOVE)
         if "." not in entity_id:
             LOGGER.error(
-                "%s is not a valid entity ID for service entity_create", entity_id
+                "%s is not a valid entity ID for service %s",
+                entity_id,
+                SERVICE_ENTITY_REMOVE,
             )
         if entity_id.split(".")[0] not in PLATFORMS:
             LOGGER.error(
-                "%s is not a valid platform (%s) for service entity_create",
+                "%s is not a valid platform (%s) for service %s",
                 entity_id.split(".")[0],
                 PLATFORMS,
+                SERVICE_ENTITY_REMOVE,
             )
         await client.entity_remove(call.data)
 
-    hass.services.async_register(DOMAIN, "register_service", handle_register_service)
-    hass.services.async_register(DOMAIN, "reload_apps", netdaemon_noop)
-    hass.services.async_register(DOMAIN, "entity_create", entity_create)
-    hass.services.async_register(DOMAIN, "entity_update", entity_update)
-    hass.services.async_register(DOMAIN, "entity_remove", entity_remove)
+    hass.services.async_register(
+        DOMAIN, SERVICE_REGISTER_SERVICE, handle_register_service
+    )
+    hass.services.async_register(DOMAIN, SERVICE_RELOAD_APPS, netdaemon_noop)
+    hass.services.async_register(DOMAIN, SERVICE_ENTITY_CREATE, entity_create)
+    hass.services.async_register(DOMAIN, SERVICE_ENTITY_UPDATE, entity_update)
+    hass.services.async_register(DOMAIN, SERVICE_ENTITY_REMOVE, entity_remove)
 
     # Platforms
     for platform in PLATFORMS:
@@ -109,6 +133,9 @@ async def async_setup_entry(hass: "HomeAssistant", config_entry: "ConfigEntry") 
         )
 
     config_entry.add_update_listener(async_reload_entry)
+
+    # API
+    hass.http.register_view(NetDaemonApi())
     return True
 
 

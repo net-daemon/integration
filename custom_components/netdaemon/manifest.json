@@ -4,7 +4,7 @@
     ],
     "config_flow": true,
     "dependencies": [
-        "websocket_api"
+        "http"
     ],
     "documentation": "https://github.com/net-daemon/integration",
     "domain": "netdaemon",

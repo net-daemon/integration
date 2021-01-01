@@ -2,10 +2,18 @@
 from typing import TYPE_CHECKING, List
 
 from homeassistant.helpers import entity_registry
-from homeassistant.helpers.storage import Store
 from homeassistant.helpers.json import JSONEncoder
+from homeassistant.helpers.storage import Store
 
-from .const import LOGGER, STORAGE_VERSION
+from .const import (
+    ATTR_ATTRIBUTES,
+    ATTR_ENTITY_ID,
+    ATTR_ICON,
+    ATTR_STATE,
+    ATTR_UNIT,
+    LOGGER,
+    STORAGE_VERSION,
+)
 
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
@@ -40,17 +48,17 @@ class NetDaemonClient:
         if data["entity_id"] in self._entities:
             del self._entities[data["entity_id"]]
 
-        self._entities[data["entity_id"]] = {
-            "state": data.get("state"),
-            "icon": data.get("icon"),
-            "unit": data.get("unit"),
-            "attributes": data.get("attributes", {}),
+        self._entities[data[ATTR_ENTITY_ID]] = {
+            ATTR_STATE: data.get(ATTR_STATE),
+            ATTR_ICON: data.get(ATTR_ICON),
+            ATTR_UNIT: data.get(ATTR_UNIT),
+            ATTR_ATTRIBUTES: data.get(ATTR_ATTRIBUTES, {}),
         }
         await self._store.async_save(self._entities)
 
     async def entity_update(self, data) -> None:
         """Update an entity."""
-        if data["entity_id"] not in self._entities:
+        if data[ATTR_ENTITY_ID] not in self._entities:
             LOGGER.error("Entity ID %s is not managed by the netdaemon integration")
             return False
         await self.entity_create(data)
@@ -59,12 +67,12 @@ class NetDaemonClient:
 
     async def entity_remove(self, data) -> None:
         """Remove an entity."""
-        if data["entity_id"] not in self._entities:
+        if data[ATTR_ENTITY_ID] not in self._entities:
             LOGGER.error("Entity ID %s is not managed by the netdaemon integration")
             return False
         LOGGER.info("Removing entity %s", data)
-        del self._entities[data["entity_id"]]
+        del self._entities[data[ATTR_ENTITY_ID]]
         registry = await entity_registry.async_get_registry(self.hass)
-        if data["entity_id"] in registry.entities:
-            registry.async_remove(data["entity_id"])
+        if data[ATTR_ENTITY_ID] in registry.entities:
+            registry.async_remove(data[ATTR_ENTITY_ID])
         await self._store.async_save(self._entities)

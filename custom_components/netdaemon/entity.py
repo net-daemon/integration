@@ -2,7 +2,7 @@
 from homeassistant.core import callback
 from homeassistant.helpers.entity import Entity
 
-from .const import INTEGRATION_VERSION, ND_ID, NAME, DOMAIN
+from .const import DOMAIN, INTEGRATION_VERSION, NAME, ND_ID
 
 
 class NetDaemonEntity(Entity):
