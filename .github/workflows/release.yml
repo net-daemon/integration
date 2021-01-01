@@ -1,0 +1,33 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  release_zip_file:
+    name: Prepare release asset
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: 🔢 Set version number
+        run: |
+          export version=${{ github.ref }}
+          sed -i '/VERSION = /c\VERSION = "${version##*/}"' "${{ github.workspace }}/custom_components/netdaemon/const.py"
+
+      - name: 📦 ZIP netdaemon directory
+        run: |
+          cd "${{ github.workspace }}/custom_components/netdaemon"
+          zip netdaemon.zip -r ./
+
+      - name: 📤 Upload release asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: "${{ github.workspace }}/custom_components/netdaemon/netdaemon.zip"
+          asset_name: netdaemon.zip
+          asset_content_type: application/zip
