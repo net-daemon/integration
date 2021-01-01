@@ -1,0 +1,22 @@
+{
+    "config": {
+        "abort": {
+            "single_instance_allowed": "Only a single configuration of NetDaemon is allowed.",
+            "min_ha_version": "You need at least version {version} of Home Assistant to setup the NetDaemon integration."
+        },
+        "error": {
+            "acc": "You need to acknowledge all the statements before continuing"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "acc_issues": "I know that this integration is custom and I will open issues in the correct repository",
+                    "acc_netdaemon": "I know that this integration is not NetDaemon, but a helper to enhance the functionality",
+                    "acc_disable": "I know that if I get issues with Home Assistant I should disable all my custom_components"
+                },
+                "description": "Before you can setup the NetDaemon integration you need to acknowledge the following",
+                "title": "NetDaemon"
+            }
+        }
+    }
+}
