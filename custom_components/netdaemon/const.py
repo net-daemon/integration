@@ -3,7 +3,7 @@ import logging
 
 LOGGER: logging.Logger = logging.getLogger(__package__)
 
-VERSION = "main"
+INTEGRATION_VERSION = "main"
 DOMAIN = "netdaemon"
 NAME = "NetDaemon"
 MINIMUM_HA_VERSION = "2020.12.0"
@@ -19,7 +19,7 @@ PLATFORMS = ["binary_sensor", "sensor", "switch"]
 STARTUP = f"""
 -------------------------------------------------------------------
 NetDaemon
-Version: {VERSION}
+Version: {INTEGRATION_VERSION}
 This is a custom integration
 If you have any issues with this you need to open an issue here:
 https://github.com/hacs/integration/issues

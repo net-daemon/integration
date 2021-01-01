@@ -14,8 +14,9 @@ jobs:
 
       - name: 🔢 Set version number
         run: |
-          export version=${{ github.ref }}
-          sed -i '/VERSION = /c\VERSION = "${version##*/}"' "${{ github.workspace }}/custom_components/netdaemon/const.py"
+          sed -i '/INTEGRATION_VERSION = /c\INTEGRATION_VERSION = "${{ github.ref }}"' "${{ github.workspace }}/custom_components/netdaemon/const.py"
+          sed -i 's|refs/heads/||' "${{ github.workspace }}/custom_components/netdaemon/const.py"
+          sed -i 's|refs/tags/||' "${{ github.workspace }}/custom_components/netdaemon/const.py"
 
       - name: 📦 ZIP netdaemon directory
         run: |
