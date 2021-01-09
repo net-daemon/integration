@@ -11,6 +11,6 @@
     "issue_tracker": "https://github.com/net-daemon/integration/issues",
     "name": "NetDeamon",
     "requirements": [
-        "awesomeversion>=20.12.5"
+        "awesomeversion>=21.1.0"
     ]
 }

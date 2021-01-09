@@ -1,19 +1,29 @@
 """NetDaemon entity."""
 from homeassistant.core import callback
-from homeassistant.helpers.entity import Entity
+from homeassistant.helpers.update_coordinator import (
+    CoordinatorEntity,
+    DataUpdateCoordinator,
+)
 
 from .const import DOMAIN, INTEGRATION_VERSION, NAME, ND_ID
 
 
-class NetDaemonEntity(Entity):
+class NetDaemonEntity(CoordinatorEntity):
     """NetDaemon entity."""
 
     def __init__(
-        self, name: str, state: str, icon: str, attributes: dict, unit: str
+        self,
+        coordinator: DataUpdateCoordinator,
+        name: str,
+        icon: str,
+        attributes: dict,
+        unit: str,
     ) -> None:
         """Initialize."""
+        super().__init__(coordinator)
+        self._coordinator = coordinator
         self._name = name
-        self._state = state
+        self._state = None
         self._icon = icon
         self._attributes = attributes
         self._unit = unit
@@ -22,11 +32,6 @@ class NetDaemonEntity(Entity):
     def name(self):
         """Return the name of the sensor."""
         return self._name
-
-    @property
-    def should_poll(self):
-        """No polling needed."""
-        return False
 
     @property
     def unique_id(self):

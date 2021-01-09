@@ -1,11 +1,16 @@
 """NetDaemon integration."""
 import asyncio
+from datetime import timedelta
 from typing import TYPE_CHECKING
+
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
 from .api import NetDaemonApi
 from .client import NetDaemonClient
 from .const import (
     ATTR_CLASS,
+    ATTR_CLIENT,
+    ATTR_COORDINATOR,
     ATTR_ENTITY_ID,
     ATTR_METHOD,
     DEFAULT_CLASS,
@@ -35,10 +40,22 @@ async def async_setup_entry(hass: "HomeAssistant", config_entry: "ConfigEntry") 
     """Set up this integration using UI."""
     LOGGER.info(STARTUP)
     client = NetDaemonClient(hass)
-    hass.data[DOMAIN] = client
+
+    async def async_update_data():
+        return client.entities
+
+    coordinator = DataUpdateCoordinator(
+        hass,
+        LOGGER,
+        name=DOMAIN,
+        update_method=async_update_data,
+        update_interval=timedelta(seconds=360),
+    )
+    hass.data[DOMAIN] = {ATTR_COORDINATOR: coordinator, ATTR_CLIENT: client}
 
     # Load stored data from .storage/netdaemon
     await client.load()
+    await coordinator.async_refresh()
 
     # Services
     async def handle_register_service(call):
@@ -73,6 +90,7 @@ async def async_setup_entry(hass: "HomeAssistant", config_entry: "ConfigEntry") 
             )
 
         await client.entity_create(call.data)
+        await coordinator.async_refresh()
         await async_reload_entry(hass, config_entry)
 
     async def entity_update(call):
@@ -94,8 +112,8 @@ async def async_setup_entry(hass: "HomeAssistant", config_entry: "ConfigEntry") 
                 SERVICE_ENTITY_UPDATE,
             )
 
-        if await client.entity_update(call.data):
-            await async_reload_entry(hass, config_entry)
+        await client.entity_update(call.data)
+        await coordinator.async_refresh()
 
     async def entity_remove(call):
         """Create an entity."""
@@ -116,6 +134,7 @@ async def async_setup_entry(hass: "HomeAssistant", config_entry: "ConfigEntry") 
                 SERVICE_ENTITY_REMOVE,
             )
         await client.entity_remove(call.data)
+        await coordinator.async_refresh()
 
     hass.services.async_register(
         DOMAIN, SERVICE_REGISTER_SERVICE, handle_register_service
@@ -141,14 +160,16 @@ async def async_setup_entry(hass: "HomeAssistant", config_entry: "ConfigEntry") 
 
 async def async_unload_entry(hass: "HomeAssistant", entry: "ConfigEntry") -> bool:
     """Handle removal of an entry."""
-    unloaded = all(
-        await asyncio.gather(
-            *[
-                hass.config_entries.async_forward_entry_unload(entry, platform)
-                for platform in PLATFORMS
-            ]
+    unloaded = False
+    if entry.state == "loaded":
+        unloaded = all(
+            await asyncio.gather(
+                *[
+                    hass.config_entries.async_forward_entry_unload(entry, platform)
+                    for platform in PLATFORMS
+                ]
+            )
         )
-    )
     if unloaded:
         del hass.data[DOMAIN]
 
