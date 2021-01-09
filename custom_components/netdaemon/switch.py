@@ -4,13 +4,10 @@ from typing import TYPE_CHECKING
 from homeassistant.components.switch import SwitchEntity
 
 from .const import (
-    ATTR_ATTRIBUTES,
     ATTR_CLIENT,
     ATTR_COORDINATOR,
     ATTR_ENTITY_ID,
-    ATTR_ICON,
     ATTR_STATE,
-    ATTR_UNIT,
     DOMAIN,
     LOGGER,
     PLATFORM_SWITCH,
@@ -36,15 +33,7 @@ async def async_setup_entry(
     for entity in client.entities:
         if entity.split(".")[0] == PLATFORM_SWITCH:
             LOGGER.debug("Adding %s", entity)
-            switches.append(
-                NetDaemonSwitch(
-                    coordinator,
-                    entity.split(".")[1],
-                    client.entities[entity].get(ATTR_ICON),
-                    client.entities[entity].get(ATTR_ATTRIBUTES, {}),
-                    client.entities[entity].get(ATTR_UNIT),
-                )
-            )
+            switches.append(NetDaemonSwitch(coordinator, entity.split(".")[1]))
 
     if switches:
         async_add_devices(switches)

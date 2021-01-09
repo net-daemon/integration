@@ -44,6 +44,9 @@ async def async_setup_entry(hass: "HomeAssistant", config_entry: "ConfigEntry") 
     async def async_update_data():
         return client.entities
 
+    # Load stored data from .storage/netdaemon
+    await client.load()
+
     coordinator = DataUpdateCoordinator(
         hass,
         LOGGER,
@@ -52,9 +55,6 @@ async def async_setup_entry(hass: "HomeAssistant", config_entry: "ConfigEntry") 
         update_interval=timedelta(seconds=360),
     )
     hass.data[DOMAIN] = {ATTR_COORDINATOR: coordinator, ATTR_CLIENT: client}
-
-    # Load stored data from .storage/netdaemon
-    await client.load()
     await coordinator.async_refresh()
 
     # Services

@@ -2,12 +2,9 @@
 from typing import TYPE_CHECKING
 
 from .const import (
-    ATTR_ATTRIBUTES,
     ATTR_CLIENT,
     ATTR_COORDINATOR,
-    ATTR_ICON,
     ATTR_STATE,
-    ATTR_UNIT,
     DOMAIN,
     LOGGER,
     PLATFORM_SENSOR,
@@ -33,15 +30,7 @@ async def async_setup_entry(
     for entity in client.entities:
         if entity.split(".")[0] == PLATFORM_SENSOR:
             LOGGER.debug("Adding %s", entity)
-            sensors.append(
-                NetDaemonSensor(
-                    coordinator,
-                    entity.split(".")[1],
-                    client.entities[entity].get(ATTR_ICON),
-                    client.entities[entity].get(ATTR_ATTRIBUTES, {}),
-                    client.entities[entity].get(ATTR_UNIT),
-                )
-            )
+            sensors.append(NetDaemonSensor(coordinator, entity.split(".")[1]))
 
     if sensors:
         async_add_devices(sensors)

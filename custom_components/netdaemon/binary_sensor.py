@@ -4,12 +4,9 @@ from typing import TYPE_CHECKING
 from homeassistant.components.binary_sensor import BinarySensorEntity
 
 from .const import (
-    ATTR_ATTRIBUTES,
     ATTR_CLIENT,
     ATTR_COORDINATOR,
-    ATTR_ICON,
     ATTR_STATE,
-    ATTR_UNIT,
     DOMAIN,
     LOGGER,
     PLATFORM_BINARY_SENSOR,
@@ -36,13 +33,7 @@ async def async_setup_entry(
         if entity.split(".")[0] == PLATFORM_BINARY_SENSOR:
             LOGGER.debug("Adding %s", entity)
             binary_sensors.append(
-                NetDaemonBinarySensor(
-                    coordinator,
-                    entity.split(".")[1],
-                    client.entities[entity].get(ATTR_ICON),
-                    client.entities[entity].get(ATTR_ATTRIBUTES, {}),
-                    client.entities[entity].get(ATTR_UNIT),
-                )
+                NetDaemonBinarySensor(coordinator, entity.split(".")[1])
             )
 
     if binary_sensors:

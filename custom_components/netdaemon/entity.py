@@ -5,7 +5,15 @@ from homeassistant.helpers.update_coordinator import (
     DataUpdateCoordinator,
 )
 
-from .const import DOMAIN, INTEGRATION_VERSION, NAME, ND_ID
+from .const import (
+    ATTR_ATTRIBUTES,
+    ATTR_ICON,
+    ATTR_UNIT,
+    DOMAIN,
+    INTEGRATION_VERSION,
+    NAME,
+    ND_ID,
+)
 
 
 class NetDaemonEntity(CoordinatorEntity):
@@ -15,18 +23,11 @@ class NetDaemonEntity(CoordinatorEntity):
         self,
         coordinator: DataUpdateCoordinator,
         name: str,
-        icon: str,
-        attributes: dict,
-        unit: str,
     ) -> None:
         """Initialize."""
         super().__init__(coordinator)
         self._coordinator = coordinator
         self._name = name
-        self._state = None
-        self._icon = icon
-        self._attributes = attributes
-        self._unit = unit
 
     @property
     def name(self):
@@ -41,12 +42,16 @@ class NetDaemonEntity(CoordinatorEntity):
     @property
     def unit_of_measurement(self):
         """Return the unit of measurement."""
-        return self._unit
+        if not self.entity_id:
+            return None
+        return self._coordinator.data[self.entity_id][ATTR_UNIT]
 
     @property
     def icon(self):
         """Return the icon."""
-        return self._icon
+        if not self.entity_id:
+            return None
+        return self._coordinator.data[self.entity_id][ATTR_ICON]
 
     @property
     def device_info(self):
@@ -63,9 +68,11 @@ class NetDaemonEntity(CoordinatorEntity):
     def device_state_attributes(self):
         """Return attributes for the sensor."""
         attributes = {"integration": DOMAIN}
-        if self._attributes:
-            for attr in self._attributes:
-                attributes[attr] = self._attributes[attr]
+        if self.entity_id and self._coordinator.data[self.entity_id][ATTR_ATTRIBUTES]:
+            for attr in self._coordinator.data[self.entity_id][ATTR_ATTRIBUTES]:
+                attributes[attr] = self._coordinator.data[self.entity_id][
+                    ATTR_ATTRIBUTES
+                ][attr]
         return attributes
 
     @callback
