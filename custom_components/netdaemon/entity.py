@@ -1,17 +1,11 @@
 """NetDaemon entity."""
-from typing import TYPE_CHECKING
-
 from homeassistant.core import callback
 from homeassistant.helpers.update_coordinator import (
     CoordinatorEntity,
     DataUpdateCoordinator,
-    UpdateFailed,
 )
 
 from .const import DOMAIN, INTEGRATION_VERSION, NAME, ND_ID
-
-if TYPE_CHECKING:
-    from .client import NetDaemonClient
 
 
 class NetDaemonEntity(CoordinatorEntity):
@@ -38,11 +32,6 @@ class NetDaemonEntity(CoordinatorEntity):
     def name(self):
         """Return the name of the sensor."""
         return self._name
-
-    @property
-    def should_poll(self):
-        """No polling needed."""
-        return False
 
     @property
     def unique_id(self):
