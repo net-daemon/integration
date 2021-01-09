@@ -3,6 +3,8 @@ from typing import TYPE_CHECKING
 
 from .const import (
     ATTR_ATTRIBUTES,
+    ATTR_CLIENT,
+    ATTR_COORDINATOR,
     ATTR_ICON,
     ATTR_STATE,
     ATTR_UNIT,
@@ -15,6 +17,7 @@ from .entity import NetDaemonEntity
 if TYPE_CHECKING:
     from homeassistant.config_entries import ConfigEntry
     from homeassistant.core import HomeAssistant
+    from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
     from .client import NetDaemonClient
 
@@ -23,7 +26,8 @@ async def async_setup_entry(
     hass: "HomeAssistant", _config_entry: "ConfigEntry", async_add_devices
 ) -> None:
     """Setup sensor platform."""
-    client: "NetDaemonClient" = hass.data[DOMAIN]
+    client: "NetDaemonClient" = hass.data[DOMAIN][ATTR_CLIENT]
+    coordinator: "DataUpdateCoordinator" = hass.data[DOMAIN][ATTR_COORDINATOR]
 
     sensors = []
     for entity in client.entities:
@@ -31,8 +35,8 @@ async def async_setup_entry(
             LOGGER.debug("Adding %s", entity)
             sensors.append(
                 NetDaemonSensor(
+                    coordinator,
                     entity.split(".")[1],
-                    client.entities[entity].get(ATTR_STATE, False),
                     client.entities[entity].get(ATTR_ICON),
                     client.entities[entity].get(ATTR_ATTRIBUTES, {}),
                     client.entities[entity].get(ATTR_UNIT),
@@ -49,4 +53,4 @@ class NetDaemonSensor(NetDaemonEntity):
     @property
     def state(self):
         """Return the state of the sensor."""
-        return self._state
+        return self._coordinator.data[self.entity_id][ATTR_STATE]

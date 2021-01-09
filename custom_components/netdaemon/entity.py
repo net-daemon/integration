@@ -1,19 +1,35 @@
 """NetDaemon entity."""
+from typing import TYPE_CHECKING
+
 from homeassistant.core import callback
-from homeassistant.helpers.entity import Entity
+from homeassistant.helpers.update_coordinator import (
+    CoordinatorEntity,
+    DataUpdateCoordinator,
+    UpdateFailed,
+)
 
 from .const import DOMAIN, INTEGRATION_VERSION, NAME, ND_ID
 
+if TYPE_CHECKING:
+    from .client import NetDaemonClient
 
-class NetDaemonEntity(Entity):
+
+class NetDaemonEntity(CoordinatorEntity):
     """NetDaemon entity."""
 
     def __init__(
-        self, name: str, state: str, icon: str, attributes: dict, unit: str
+        self,
+        coordinator: DataUpdateCoordinator,
+        name: str,
+        icon: str,
+        attributes: dict,
+        unit: str,
     ) -> None:
         """Initialize."""
+        super().__init__(coordinator)
+        self._coordinator = coordinator
         self._name = name
-        self._state = state
+        self._state = None
         self._icon = icon
         self._attributes = attributes
         self._unit = unit

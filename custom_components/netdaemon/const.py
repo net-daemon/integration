@@ -12,6 +12,8 @@ STORAGE_VERSION = "1"
 ND_ID = "86ec6a70-b2b8-427d-8fcf-3f14331dddd7"
 
 ATTR_CLASS = "class"
+ATTR_CLIENT = "client"
+ATTR_COORDINATOR = "coordinator"
 ATTR_METHOD = "method"
 ATTR_ENTITY_ID = "entity_id"
 ATTR_STATE = "state"
@@ -51,7 +53,11 @@ PLATFORM_BINARY_SENSOR = "binary_sensor"
 PLATFORM_SENSOR = "sensor"
 PLATFORM_SWITCH = "switch"
 
-PLATFORMS = [PLATFORM_BINARY_SENSOR, PLATFORM_SENSOR, PLATFORM_SWITCH]
+PLATFORMS = [
+    PLATFORM_BINARY_SENSOR,
+    PLATFORM_SENSOR,
+    PLATFORM_SWITCH,
+]
 
 STARTUP = f"""
 -------------------------------------------------------------------

@@ -26,7 +26,7 @@ class NetDaemonClient:
         """Initialize the NetDaemon class."""
         self.hass = hass
         self._entities: dict = {}
-        self._store = Store(hass, STORAGE_VERSION, "netdaemon", encoder=JSONEncoder)
+        self.store = Store(hass, STORAGE_VERSION, "netdaemon", encoder=JSONEncoder)
 
     @property
     def entities(self) -> List[str]:
@@ -35,12 +35,12 @@ class NetDaemonClient:
 
     async def load(self) -> None:
         """Load stored data."""
-        restored = await self._store.async_load()
+        restored = await self.store.async_load()
         self._entities = restored if restored else {}
 
     async def clear_storage(self) -> None:
         """Clear storage."""
-        await self._store.async_remove()
+        await self.store.async_remove()
 
     async def entity_create(self, data) -> None:
         """Create an entity."""
@@ -54,25 +54,27 @@ class NetDaemonClient:
             ATTR_UNIT: data.get(ATTR_UNIT),
             ATTR_ATTRIBUTES: data.get(ATTR_ATTRIBUTES, {}),
         }
-        await self._store.async_save(self._entities)
+        await self.store.async_save(self._entities)
 
     async def entity_update(self, data) -> None:
         """Update an entity."""
-        if data[ATTR_ENTITY_ID] not in self._entities:
+        entity_id = data[ATTR_ENTITY_ID]
+        if entity_id not in self._entities:
             LOGGER.error("Entity ID %s is not managed by the netdaemon integration")
-            return False
-        await self.entity_create(data)
-        await self._store.async_save(self._entities)
-        return True
+            return
+        self._entities[entity_id].update(data)
+        await self.store.async_save(self._entities)
 
     async def entity_remove(self, data) -> None:
         """Remove an entity."""
         if data[ATTR_ENTITY_ID] not in self._entities:
             LOGGER.error("Entity ID %s is not managed by the netdaemon integration")
-            return False
+            return
         LOGGER.info("Removing entity %s", data)
         del self._entities[data[ATTR_ENTITY_ID]]
-        registry = await entity_registry.async_get_registry(self.hass)
+        registry: entity_registry.EntityRegistry = (
+            await entity_registry.async_get_registry(self.hass)
+        )
         if data[ATTR_ENTITY_ID] in registry.entities:
             registry.async_remove(data[ATTR_ENTITY_ID])
-        await self._store.async_save(self._entities)
+        await self.store.async_save(self._entities)
