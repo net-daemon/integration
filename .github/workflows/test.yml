@@ -29,9 +29,6 @@ jobs:
           tag: ${{ matrix.channel }}
           config-dir: .github/test_configuration
 
-      - name: 💤 Wait for integration to be setup # This is a workaround
-        run: sleep 20
-
       - name: ➕ Add entity
         run: |
           curl -sSL -f -X POST \
