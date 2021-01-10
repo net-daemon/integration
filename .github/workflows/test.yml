@@ -1,0 +1,50 @@
+name: Test with Home Assistant
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  test_with_home_assistant:
+    name: Test with Home Assistant
+    strategy:
+      matrix:
+        channel: [stable, beta, dev]
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: 📋 Copy integration files to test configuration
+        run: cp -r ./custom_components ./.github/test_configuration
+
+      - name: 👷 Setup Home Assistant
+        id: homeassistant
+        uses: ludeeus/setup-homeassistant@main
+        with:
+          tag: ${{ matrix.channel }}
+          config-dir: .github/test_configuration
+
+      - name: ➕ Add entity
+        run: |
+          curl -sSL -f -X POST \
+            -H "Authorization: Bearer ${{ steps.homeassistant.outputs.token }}" \
+            -H "Content-Type: application/json" \
+            -d '{"entity_id": "sensor.awesome", "state": "Even more awesome!"}' \
+            ${{ steps.homeassistant.outputs.url }}/api/services/netdaemon/entity_create
+
+      - name: ✅ Check the state of the entity
+        run: |
+          result=$(curl -sSL -f -X GET \
+            -H "Authorization: Bearer ${{ steps.homeassistant.outputs.token }}" \
+            -H "Content-Type: application/json" \
+            ${{ steps.homeassistant.outputs.url }}/api/states/sensor.awesome | jq -r .state)
+
+          echo "$result"
+          if [ "$result" != "Even more awesome!" ];then
+            exit 1
+          fi

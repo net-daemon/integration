@@ -1,0 +1,22 @@
+{
+    "version": 1,
+    "key": "core.config_entries",
+    "data": {
+        "entries": [
+            {
+                "entry_id": "111111111111111111111111111111111",
+                "version": 1,
+                "domain": "netdaemon",
+                "title": "",
+                "data": {},
+                "options": {},
+                "system_options": {
+                    "disable_new_entities": false
+                },
+                "source": "user",
+                "connection_class": "local_poll",
+                "unique_id": null
+            }
+        ]
+    }
+}
