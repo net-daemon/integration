@@ -1,4 +1,4 @@
-name: Test
+name: Test with Home Assistant
 
 on:
   pull_request:
@@ -9,8 +9,8 @@ on:
       - main
 
 jobs:
-  test:
-    name: Home Assistant
+  test_with_home_assistant:
+    name: Test with Home Assistant
     strategy:
       matrix:
         channel: [stable, beta, dev]
