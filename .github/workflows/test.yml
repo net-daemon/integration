@@ -19,6 +19,9 @@ jobs:
       - name: 📥 Checkout the repository
         uses: actions/checkout@v2
 
+      - name: 📋 Copy integration files to test configuration
+        run: cp -r ./custom_components ./.github/test_configuration
+
       - name: 👷 Setup Home Assistant
         id: homeassistant
         uses: ludeeus/setup-homeassistant@main
