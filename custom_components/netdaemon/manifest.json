@@ -10,6 +10,7 @@
     "domain": "netdaemon",
     "issue_tracker": "https://github.com/net-daemon/integration/issues",
     "name": "NetDeamon",
+    "version": "21.09.1",
     "requirements": [
         "awesomeversion>=21.1.0"
     ]
