@@ -1,17 +1,17 @@
 {
-    "codeowners": [
-        "@net-daemon"
-    ],
-    "config_flow": true,
-    "dependencies": [
-        "http"
-    ],
-    "documentation": "https://github.com/net-daemon/integration",
-    "domain": "netdaemon",
-    "issue_tracker": "https://github.com/net-daemon/integration/issues",
-    "name": "NetDeamon",
-    "version": "21.09.0",
-    "requirements": [
-        "awesomeversion>=21.1.0"
-    ]
+  "codeowners": [
+    "@net-daemon"
+  ],
+  "config_flow": true,
+  "dependencies": [
+    "http"
+  ],
+  "documentation": "https://github.com/net-daemon/integration",
+  "domain": "netdaemon",
+  "issue_tracker": "https://github.com/net-daemon/integration/issues",
+  "name": "NetDeamon",
+  "version": "0.0.0",
+  "requirements": [
+    "awesomeversion>=21.1.0"
+  ]
 }
