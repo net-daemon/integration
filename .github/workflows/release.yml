@@ -12,11 +12,14 @@ jobs:
       - name: 📥 Checkout the repository
         uses: actions/checkout@v2
 
+      - name: 🔢 Get version
+        id: version
+        uses: home-assistant/actions/helpers/version@master
+
       - name: 🔢 Set version number
         run: |
-          sed -i '/INTEGRATION_VERSION = /c\INTEGRATION_VERSION = "${{ github.ref }}"' "${{ github.workspace }}/custom_components/netdaemon/const.py"
-          sed -i 's|refs/heads/||' "${{ github.workspace }}/custom_components/netdaemon/const.py"
-          sed -i 's|refs/tags/||' "${{ github.workspace }}/custom_components/netdaemon/const.py"
+          sed -i '/INTEGRATION_VERSION = /c\INTEGRATION_VERSION = "${{ steps.version.outputs.version }}"' "${{ github.workspace }}/custom_components/netdaemon/const.py"
+          jq '.version = ${{ steps.version.outputs.version }}' ${{ github.workspace }}/custom_components/netdaemon/manifest.json" > tmp && mv -f tmp ${{ github.workspace }}/custom_components/netdaemon/manifest.json"
 
       - name: 📦 ZIP netdaemon directory
         run: |
