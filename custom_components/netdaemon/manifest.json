@@ -9,7 +9,7 @@
   "documentation": "https://github.com/net-daemon/integration",
   "domain": "netdaemon",
   "issue_tracker": "https://github.com/net-daemon/integration/issues",
-  "name": "NetDeamon",
+  "name": "NetDaemon",
   "version": "0.0.0",
   "requirements": [
     "awesomeversion>=21.1.0"
