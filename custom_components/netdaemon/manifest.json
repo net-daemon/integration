@@ -3,6 +3,7 @@
     "@net-daemon"
   ],
   "config_flow": true,
+  "iot_class": "cloud_polling",
   "dependencies": [
     "http"
   ],
@@ -10,7 +11,7 @@
   "domain": "netdaemon",
   "issue_tracker": "https://github.com/net-daemon/integration/issues",
   "name": "NetDaemon",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "requirements": [
     "awesomeversion>=21.1.0"
   ]
