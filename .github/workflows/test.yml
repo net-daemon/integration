@@ -43,7 +43,7 @@ jobs:
           result=$(curl -sSL -f -X GET \
             -H "Authorization: Bearer ${{ steps.homeassistant.outputs.token }}" \
             -H "Content-Type: application/json" \
-            ${{ steps.homeassistant.outputs.url }}/api/states/sensor.awesome | jq -r .state)
+            ${{ steps.homeassistant.outputs.url }}/api/states | jq -r .state)
 
           echo "$result"
           if [ "$result" != "Even more awesome!" ];then
