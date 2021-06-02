@@ -51,3 +51,7 @@ jobs:
           if [ "$result" != "Even more awesome!" ];then
             exit 1
           fi
+
+      - name: 📜 Get logs
+        if: ${{ failure() }} || ${{ cancelled() }}
+        run: docker logs ${{ steps.homeassistant.outputs.containername }}
