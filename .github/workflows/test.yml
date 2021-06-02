@@ -45,6 +45,8 @@ jobs:
             -H "Content-Type: application/json" \
             ${{ steps.homeassistant.outputs.url }}/api/states)
 
+          docker logs ${{ steps.homeassistant.outputs.containername }}
+
           echo "$result"
           if [ "$result" != "Even more awesome!" ];then
             exit 1
