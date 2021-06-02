@@ -59,6 +59,8 @@ PLATFORMS = [
     PLATFORM_SWITCH,
 ]
 
+STATE_ON_VALUES = set(["true", "on", "1"])
+
 STARTUP = f"""
 -------------------------------------------------------------------
 NetDaemon
