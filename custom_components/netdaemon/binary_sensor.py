@@ -46,4 +46,5 @@ class NetDaemonBinarySensor(NetDaemonEntity, BinarySensorEntity):
     @property
     def is_on(self):
         """Return the state of the switch."""
-        return self._coordinator.data[self.entity_id][ATTR_STATE]
+        state = str(self._coordinator.data[self.entity_id][ATTR_STATE]).lower()
+        return state in ["true", "on", "1", "high", "open"]
