@@ -21,6 +21,7 @@ ATTR_ICON = "icon"
 ATTR_UNIT = "unit"
 ATTR_ATTRIBUTES = "attributes"
 ATTR_VERSION = "version"
+ATTR_OPTIONS = "options"
 
 REASON_MIN_HA_VERSION = "min_ha_version"
 REASON_SINGLE = "single_instance_allowed"
@@ -52,11 +53,13 @@ SERVICE_ENTITY_REMOVE = "entity_remove"
 PLATFORM_BINARY_SENSOR = "binary_sensor"
 PLATFORM_SENSOR = "sensor"
 PLATFORM_SWITCH = "switch"
+PLATFORM_SELECT = "select"
 
 PLATFORMS = [
     PLATFORM_BINARY_SENSOR,
     PLATFORM_SENSOR,
     PLATFORM_SWITCH,
+    PLATFORM_SELECT,
 ]
 
 STATE_ON_VALUES = set(["true", "on", "1"])

@@ -10,11 +10,12 @@ This is a helper integration for NetDaemon, this is not NetDeamon it self, for t
 - Service to register custom services to use in NetDaemon
 - Service to force a reload of NetDaemon
 
-For now only the folowing platforms are supported:
+For now only the following platforms are supported:
 
 - `binary_sensor`
 - `sensor`
 - `switch`
+- `select`
 
 ## Installation
 
