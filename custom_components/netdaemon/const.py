@@ -6,7 +6,7 @@ LOGGER: logging.Logger = logging.getLogger(__package__)
 INTEGRATION_VERSION = "main"
 DOMAIN = "netdaemon"
 NAME = "NetDaemon"
-MINIMUM_HA_VERSION = "2020.12.0"
+MINIMUM_HA_VERSION = "2021.7.0"
 STORAGE_VERSION = "1"
 
 ND_ID = "86ec6a70-b2b8-427d-8fcf-3f14331dddd7"
