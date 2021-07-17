@@ -9,13 +9,6 @@ from homeassistant.components.climate import (
     ATTR_FAN_MODES,
     ATTR_CURRENT_TEMPERATURE,
     ATTR_TEMPERATURE,
-    SUPPORT_AUX_HEAT,
-    SUPPORT_FAN_MODE,
-    SUPPORT_PRESET_MODE,
-    SUPPORT_SWING_MODE,
-    SUPPORT_TARGET_HUMIDITY,
-    SUPPORT_TARGET_TEMPERATURE,
-    SUPPORT_TARGET_TEMPERATURE_RANGE,
 )
 from homeassistant.const import ATTR_SUPPORTED_FEATURES
 
@@ -31,7 +24,6 @@ from .const import (
     TEMP_CELSIUS,
     LOGGER,
     PLATFORM_CLIMATE,
-    STATE_ON_VALUES,
 )
 from .entity import NetDaemonEntity
 
