@@ -18,6 +18,7 @@ from .const import (
     ATTR_ENTITY_ID,
     ATTR_STATE,
     DOMAIN,
+    TEMP_CELSIUS,
     LOGGER,
     PLATFORM_CLIMATE,
     STATE_ON_VALUES,
@@ -53,6 +54,41 @@ async def async_setup_entry(
 
 class NetDaemonClimateEntity(NetDaemonEntity, ClimateEntity):
     """NetDaemon ClimateEntity class."""
+
+    @property
+    def supported_features(self) -> int:
+        """Return the list of supported features."""
+        return 0
+
+    @property
+    def temperature_unit(self) -> str:
+        """Return the unit of measurement used by the platform."""
+        return TEMP_CELSIUS
+
+    @property
+    def hvac_mode(self) -> str:
+        """Return hvac operation ie. heat, cool mode.
+
+        Need to be one of HVAC_MODE_*.
+        """
+        if not self.entity_id:
+            return "off"
+        return self._coordinator.data[self.entity_id].get(ATTR_STATE, "off")
+
+    @property
+    def hvac_modes(self) -> list[str]:
+        """Return the list of available hvac operation modes.
+
+        Need to be a subset of HVAC_MODES.
+        """
+        if not self.entity_id:
+            return ["off"]
+
+        return (
+            self._coordinator.data[self.entity_id]
+            .get("attributes", {})
+            .get("hvac_modes", [])
+        )
 
     # @property
     # def is_on(self):

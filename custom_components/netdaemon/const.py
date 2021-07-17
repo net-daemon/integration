@@ -22,6 +22,9 @@ ATTR_UNIT = "unit"
 ATTR_ATTRIBUTES = "attributes"
 ATTR_VERSION = "version"
 
+
+TEMP_CELSIUS = "°C"
+
 REASON_MIN_HA_VERSION = "min_ha_version"
 REASON_SINGLE = "single_instance_allowed"
 
