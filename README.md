@@ -15,6 +15,7 @@ For now only the folowing platforms are supported:
 - `binary_sensor`
 - `sensor`
 - `switch`
+- `climate`
 
 ## Installation
 
