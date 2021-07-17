@@ -1,0 +1,25 @@
+service: netdaemon.entity_create
+data:
+  entity_id: climate.test
+  state: off
+  attributes:
+    hvac_modes:
+      - heat
+      - off
+    min_temp: 5
+    max_temp: 30
+    friendly_name: "Studeerkamper Radiator"
+    supported_features: 1
+
+service: netdaemon.entity_create
+data:
+  entity_id: sensor.test
+  state: 100
+  attributes:
+    hvac_modes:
+      - heat
+      - off
+    min_temp: 5
+    max_temp: 30
+    friendly_name: "My Sensor"
+    supported_features: 1
