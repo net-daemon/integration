@@ -70,9 +70,11 @@ class NetDaemonClimateEntity(NetDaemonEntity, ClimateEntity):
         """Return the list of supported features."""
         if not self.entity_id:
             return 0
-        attributes = self._coordinator.data[self.entity_id][ATTR_ATTRIBUTES]
-
-        return attributes.get(ATTR_SUPPORTED_FEATURES, 0)
+        return (
+            self._coordinator.data[self.entity_id]
+            .get(ATTR_ATTRIBUTES, {})
+            .get(ATTR_SUPPORTED_FEATURES, 0)
+        )
 
     @property
     def temperature_unit(self) -> str:
