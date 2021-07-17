@@ -17,12 +17,13 @@ ATTR_COORDINATOR = "coordinator"
 ATTR_METHOD = "method"
 ATTR_ENTITY_ID = "entity_id"
 ATTR_STATE = "state"
+ATTR_HVAC_MODE = "hvac_mode"
 ATTR_ICON = "icon"
 ATTR_UNIT = "unit"
 ATTR_ATTRIBUTES = "attributes"
 ATTR_VERSION = "version"
-
-
+ATTR_TARGET_TEMPERATURE = "target_temperature"
+ATTR_TARGET_HUMIDITY = "target_humidity"
 TEMP_CELSIUS = "°C"
 
 REASON_MIN_HA_VERSION = "min_ha_version"
