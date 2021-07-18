@@ -24,6 +24,7 @@ ATTR_ATTRIBUTES = "attributes"
 ATTR_VERSION = "version"
 ATTR_TARGET_TEMPERATURE = "target_temperature"
 ATTR_TARGET_HUMIDITY = "target_humidity"
+ATTR_TEMPERATURE_UNIT = "temperature_unit"
 TEMP_CELSIUS = "°C"
 
 REASON_MIN_HA_VERSION = "min_ha_version"

@@ -23,6 +23,7 @@ from .const import (
     TEMP_CELSIUS,
     LOGGER,
     PLATFORM_CLIMATE,
+    ATTR_TEMPERATURE_UNIT,
 )
 from .entity import NetDaemonEntity
 
@@ -70,7 +71,13 @@ class NetDaemonClimateEntity(NetDaemonEntity, ClimateEntity):
     @property
     def temperature_unit(self) -> str:
         """Return the unit of measurement used by the platform."""
-        return TEMP_CELSIUS
+        if not self.entity_id:
+            return TEMP_CELSIUS
+        return (
+            self._coordinator.data[self.entity_id]
+            .get(ATTR_ATTRIBUTES, {})
+            .get(ATTR_TEMPERATURE_UNIT, TEMP_CELSIUS)
+        )
 
     @property
     def hvac_mode(self) -> str:
@@ -127,7 +134,7 @@ class NetDaemonClimateEntity(NetDaemonEntity, ClimateEntity):
         return (
             self._coordinator.data[self.entity_id]
             .get(ATTR_ATTRIBUTES, {})
-            .get(ATTR_HVAC_MODES, [])
+            .get(ATTR_HVAC_MODES, ["off"])
         )
 
     @property
@@ -142,7 +149,7 @@ class NetDaemonClimateEntity(NetDaemonEntity, ClimateEntity):
         return (
             self._coordinator.data[self.entity_id]
             .get(ATTR_ATTRIBUTES, {})
-            .get(ATTR_FAN_MODES, [])
+            .get(ATTR_FAN_MODES, ["off"])
         )
 
     async def async_set_temperature(self, **kwargs) -> None:
