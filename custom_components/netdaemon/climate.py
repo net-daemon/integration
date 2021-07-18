@@ -10,6 +10,7 @@ from homeassistant.components.climate import (
     ATTR_CURRENT_TEMPERATURE,
     ATTR_TEMPERATURE,
 )
+from homeassistant.components.climate.const import ATTR_HUMIDITY
 from homeassistant.const import ATTR_SUPPORTED_FEATURES
 
 from .const import (
@@ -18,8 +19,6 @@ from .const import (
     ATTR_COORDINATOR,
     ATTR_ENTITY_ID,
     ATTR_STATE,
-    ATTR_TARGET_TEMPERATURE,
-    ATTR_TARGET_HUMIDITY,
     DOMAIN,
     TEMP_CELSIUS,
     LOGGER,
@@ -102,7 +101,7 @@ class NetDaemonClimateEntity(NetDaemonEntity, ClimateEntity):
         return (
             self._coordinator.data[self.entity_id]
             .get(ATTR_ATTRIBUTES, {})
-            .get(ATTR_TARGET_TEMPERATURE, 0.0)
+            .get(ATTR_TEMPERATURE, 0.0)
         )
 
     @property
@@ -113,7 +112,7 @@ class NetDaemonClimateEntity(NetDaemonEntity, ClimateEntity):
         return (
             self._coordinator.data[self.entity_id]
             .get(ATTR_ATTRIBUTES, {})
-            .get(ATTR_TARGET_HUMIDITY, 0)
+            .get(ATTR_HUMIDITY, 0)
         )
 
     @property
@@ -153,7 +152,7 @@ class NetDaemonClimateEntity(NetDaemonEntity, ClimateEntity):
             return
         temperature = kwargs.get(ATTR_TEMPERATURE)
         attributes = self._coordinator.data[self.entity_id][ATTR_ATTRIBUTES]
-        attributes[ATTR_TARGET_TEMPERATURE] = temperature
+        attributes[ATTR_TEMPERATURE] = temperature
         await self.hass.data[DOMAIN][ATTR_CLIENT].entity_update(
             {
                 ATTR_ENTITY_ID: self.entity_id,
@@ -168,7 +167,7 @@ class NetDaemonClimateEntity(NetDaemonEntity, ClimateEntity):
             LOGGER.error("Setting target humidity on non existing climate entity")
             return
         attributes = self._coordinator.data[self.entity_id][ATTR_ATTRIBUTES]
-        attributes[ATTR_TARGET_HUMIDITY] = humidity
+        attributes[ATTR_HUMIDITY] = humidity
         await self.hass.data[DOMAIN][ATTR_CLIENT].entity_update(
             {
                 ATTR_ENTITY_ID: self.entity_id,
