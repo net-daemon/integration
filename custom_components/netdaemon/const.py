@@ -37,7 +37,6 @@ ACKNOWLEDGE_DISABLE = "acc_disable"
 ERROR_BASE = "base"
 ERROR_ACC = "acc"
 
-DEFAULT_CLASS = "no class provided"
 DEFAULT_METHOD = "no method provided"
 
 API_PATH_VERSION = "version"
