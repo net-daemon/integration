@@ -13,6 +13,7 @@ ND_ID = "86ec6a70-b2b8-427d-8fcf-3f14331dddd7"
 
 ATTR_CLASS = "class"
 ATTR_CLIENT = "client"
+ATTR_SERVICE = "service"
 ATTR_COORDINATOR = "coordinator"
 ATTR_METHOD = "method"
 ATTR_ENTITY_ID = "entity_id"
@@ -37,6 +38,7 @@ ACKNOWLEDGE_DISABLE = "acc_disable"
 ERROR_BASE = "base"
 ERROR_ACC = "acc"
 
+DEFAULT_CLASS = "no class provided"
 DEFAULT_METHOD = "no method provided"
 
 API_PATH_VERSION = "version"
