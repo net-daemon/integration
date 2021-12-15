@@ -1,5 +1,6 @@
 """NetDaemon entity."""
 from homeassistant.core import callback
+from homeassistant.helpers.device_registry import DeviceEntryType
 from homeassistant.helpers.update_coordinator import (
     CoordinatorEntity,
     DataUpdateCoordinator,
@@ -61,7 +62,7 @@ class NetDaemonEntity(CoordinatorEntity):
             "name": NAME,
             "sw_version": INTEGRATION_VERSION,
             "manufacturer": "netdaemon.xyz",
-            "entry_type": "service",
+            "entry_type": DeviceEntryType.SERVICE,
         }
 
     @property
