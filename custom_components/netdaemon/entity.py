@@ -1,6 +1,7 @@
 """NetDaemon entity."""
+from awesomeversion import AwesomeVersion
+from homeassistant.const import __version__ as HA_VERSION
 from homeassistant.core import callback
-from homeassistant.helpers.device_registry import DeviceEntryType
 from homeassistant.helpers.update_coordinator import (
     CoordinatorEntity,
     DataUpdateCoordinator,
@@ -57,13 +58,21 @@ class NetDaemonEntity(CoordinatorEntity):
     @property
     def device_info(self):
         """Return device information about NetDaemon."""
-        return {
+        info = {
             "identifiers": {(DOMAIN, ND_ID)},
             "name": NAME,
             "sw_version": INTEGRATION_VERSION,
             "manufacturer": "netdaemon.xyz",
-            "entry_type": DeviceEntryType.SERVICE,
         }
+        # LEGACY can be removed when min HA version is 2021.12
+        if AwesomeVersion(HA_VERSION) >= "2021.12.0b0":
+            # pylint: disable=import-outside-toplevel
+            from homeassistant.helpers.device_registry import DeviceEntryType
+
+            info["entry_type"] = DeviceEntryType.SERVICE
+        else:
+            info["entry_type"] = "service"
+        return info
 
     @property
     def extra_state_attributes(self):
