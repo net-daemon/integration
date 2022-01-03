@@ -26,10 +26,10 @@ For now only the folowing platforms are supported:
 
 ## Use
 
-Within your netdaemon app call into `ha.CallService` with one of the methods defined in [services.yaml](custom_components/netdaemon/services.yaml) - you can specify the appropriate fields via anonymous parameters as in the example below, noting that the domain should be set to "netdaemon":
+Within your netdaemon app call into `ha.CallService` with one of the methods defined in [services.yaml](custom_components/netdaemon/services.yaml) - you can specify the appropriate fields via anonymous parameters as in the example below:
 
 ```csharp
-public MyApp(IHaContext ha, ILogger<HelloWorldApp> logger)
+public MyApp(IHaContext ha)
 {
      ha.CallService("netdaemon", "entity_create", data: new {entity_id ="sensor.scott", state = "present", description = "My sensor"});
 ...
