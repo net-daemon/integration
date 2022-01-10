@@ -49,6 +49,10 @@ class NetDaemonEntity(CoordinatorEntity):
         return self._coordinator.data[self.entity_id][ATTR_UNIT]
 
     @property
+    def available(self) -> bool:
+        return super().available and self.entity_id in self._coordinator.data
+
+    @property
     def icon(self):
         """Return the icon."""
         if not self.entity_id:
