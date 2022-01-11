@@ -16,6 +16,7 @@ For now only the following platforms are supported:
 - `sensor`
 - `switch`
 - `select`
+- `climate`
 
 ## Installation
 
