@@ -57,14 +57,6 @@ class NetDaemonSwitch(NetDaemonEntity, SwitchEntity):
         """Turn the device off."""
         await self._turn_off()
 
-    async def _async_toggle(self) -> None:
-        """Toggle the switch entity."""
-        current = self._coordinator.data[self.entity_id][ATTR_STATE]
-        await self.hass.data[DOMAIN][ATTR_CLIENT].entity_update(
-            {ATTR_ENTITY_ID: self.entity_id, ATTR_STATE: not current}
-        )
-        self.async_write_ha_state()
-
     async def _turn_on(self) -> None:
         """Toggle the switch entity."""
         await self.hass.data[DOMAIN][ATTR_CLIENT].entity_update(
