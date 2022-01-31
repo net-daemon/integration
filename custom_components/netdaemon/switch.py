@@ -46,7 +46,7 @@ class NetDaemonSwitch(NetDaemonEntity, SwitchEntity):
     @property
     def is_on(self):
         """Return the state of the switch."""
-        state = str(self._coordinator.data[self.entity_id][ATTR_STATE]).lower()
+        state = str(self._data_point(ATTR_STATE)).lower()
         return state in STATE_ON_VALUES
 
     async def async_turn_on(self, **kwargs):
