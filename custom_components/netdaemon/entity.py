@@ -31,6 +31,16 @@ class NetDaemonEntity(CoordinatorEntity):
         self._coordinator = coordinator
         self._name = name
 
+    def _data_point(self, key, default=None):
+        if not self.entity_id:
+            return None
+        if not self._coordinator.data:
+            return None
+        if not self.available:
+            return None
+
+        return self._coordinator.data.get(self.entity_id, {}).get(key, default)
+
     @property
     def name(self):
         """Return the name of the sensor."""
@@ -44,9 +54,7 @@ class NetDaemonEntity(CoordinatorEntity):
     @property
     def unit_of_measurement(self):
         """Return the unit of measurement."""
-        if not self.entity_id:
-            return None
-        return self._coordinator.data[self.entity_id][ATTR_UNIT]
+        return self._data_point(ATTR_UNIT)
 
     @property
     def available(self) -> bool:
@@ -55,9 +63,7 @@ class NetDaemonEntity(CoordinatorEntity):
     @property
     def icon(self):
         """Return the icon."""
-        if not self.entity_id:
-            return None
-        return self._coordinator.data[self.entity_id][ATTR_ICON]
+        return self._data_point(ATTR_ICON)
 
     @property
     def device_info(self):
@@ -82,11 +88,10 @@ class NetDaemonEntity(CoordinatorEntity):
     def extra_state_attributes(self):
         """Return attributes for the sensor."""
         attributes = {"integration": DOMAIN}
-        if self.entity_id and self._coordinator.data[self.entity_id][ATTR_ATTRIBUTES]:
-            for attr in self._coordinator.data[self.entity_id][ATTR_ATTRIBUTES]:
-                attributes[attr] = self._coordinator.data[self.entity_id][
-                    ATTR_ATTRIBUTES
-                ][attr]
+        for attr in self._data_point(ATTR_ATTRIBUTES, {}):
+            attributes[attr] = self._coordinator.data[self.entity_id][ATTR_ATTRIBUTES][
+                attr
+            ]
         return attributes
 
     @callback
