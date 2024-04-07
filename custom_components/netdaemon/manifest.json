@@ -3,7 +3,7 @@
     "@net-daemon"
   ],
   "config_flow": true,
-  "iot_class": "Calculated",
+  "iot_class": "calculated",
   "dependencies": [
     "http"
   ],
