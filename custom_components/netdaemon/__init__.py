@@ -153,7 +153,7 @@ async def async_setup_entry(hass: "HomeAssistant", config_entry: "ConfigEntry") 
     for platform in PLATFORMS:
         LOGGER.debug("Adding platfrom %s", platform)
         await hass.async_create_task(
-            hass.config_entries.async_forward_entry_setup(config_entry, platform)
+            hass.config_entries.async_forward_entry_setups(config_entry, platform)
         )
 
     config_entry.add_update_listener(async_reload_entry)
