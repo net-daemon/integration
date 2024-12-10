@@ -152,7 +152,7 @@ async def async_setup_entry(hass: "HomeAssistant", config_entry: "ConfigEntry") 
     # Platforms
     for platform in PLATFORMS:
         LOGGER.debug("Adding platfrom %s", platform)
-        hass.async_add_job(
+        await hass.async_create_task(
             hass.config_entries.async_forward_entry_setup(config_entry, platform)
         )
 
