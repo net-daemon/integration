@@ -150,11 +150,7 @@ async def async_setup_entry(hass: "HomeAssistant", config_entry: "ConfigEntry") 
     hass.services.async_register(DOMAIN, SERVICE_ENTITY_REMOVE, entity_remove)
 
     # Platforms
-    for platform in PLATFORMS:
-        LOGGER.debug("Adding platfrom %s", platform)
-        await hass.async_create_task(
-            hass.config_entries.async_forward_entry_setups(config_entry, platform)
-        )
+    await hass.config_entries.async_forward_entry_setups(config_entry, PLATFORMS)
 
     config_entry.add_update_listener(async_reload_entry)
 
