@@ -1,17 +1,22 @@
 """Climate platform for NetDaemon."""
+
+from functools import cached_property
 from typing import TYPE_CHECKING
 
 from homeassistant.components.climate import (
     ClimateEntity,
+)
+from homeassistant.components.climate.const import (
+    ATTR_HUMIDITY,
     ATTR_HVAC_MODE,
     ATTR_HVAC_MODES,
     ATTR_FAN_MODE,
     ATTR_FAN_MODES,
     ATTR_CURRENT_TEMPERATURE,
-    ATTR_TEMPERATURE,
+    ClimateEntityFeature
 )
-from homeassistant.components.climate.const import ATTR_HUMIDITY
-from homeassistant.const import ATTR_SUPPORTED_FEATURES
+
+from homeassistant.const import ATTR_SUPPORTED_FEATURES, ATTR_TEMPERATURE
 
 from .const import (
     ATTR_ATTRIBUTES,
@@ -64,7 +69,7 @@ class NetDaemonClimateEntity(NetDaemonEntity, ClimateEntity):
             return 0
         return self._data_point(ATTR_ATTRIBUTES, {}).get(ATTR_SUPPORTED_FEATURES, 0)
 
-    @property
+    @cached_property
     def temperature_unit(self) -> str:
         """Return the unit of measurement used by the platform."""
         if not self.entity_id:

@@ -18,6 +18,35 @@ from .const import (
 )
 
 
+# class CoordinatorEntity(BaseCoordinatorEntity[_DataUpdateCoordinatorT]):
+#     """A class for entities using DataUpdateCoordinator."""
+#
+#     def __init__(
+#         self, coordinator: _DataUpdateCoordinatorT, context: Any = None
+#     ) -> None:
+#         """Create the entity with a DataUpdateCoordinator.
+#
+#         Passthrough to BaseCoordinatorEntity.
+#
+#         Necessary to bind TypeVar to correct scope.
+#         """
+#         super().__init__(coordinator, context)
+#
+#     @property
+#     def available(self) -> bool:
+#         """Return if entity is available."""
+#         return self.coordinator.last_update_success
+#
+#     async def async_update(self) -> None:
+#         """Update the entity.
+#
+#         Only used by the generic entity update service.
+#         """
+#         # Ignore manual update requests if the entity is disabled
+#         if not self.enabled:
+#             return
+#
+#         await self.coordinator.async_request_refresh()
 class NetDaemonEntity(CoordinatorEntity):
     """NetDaemon entity."""
 

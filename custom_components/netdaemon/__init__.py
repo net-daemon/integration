@@ -26,6 +26,7 @@ from .const import (
     SERVICE_RELOAD_APPS,
     STARTUP,
 )
+from homeassistant.helpers import device_registry as dr
 
 if TYPE_CHECKING:
     from homeassistant.config_entries import ConfigEntry
@@ -36,10 +37,14 @@ async def async_setup(_hass: "HomeAssistant", _config: dict) -> bool:
     """Set up this integration using yaml."""
     return True
 
-
 async def async_setup_entry(hass: "HomeAssistant", config_entry: "ConfigEntry") -> bool:
     """Set up this integration using UI."""
     LOGGER.info(STARTUP)
+    device_registry = dr.async_get(hass)
+    x = device_registry.async_get("d6f3c56ae1b7431f93ee89032cb373ca")
+    
+    LOGGER.warning(x)
+    
     client = NetDaemonClient(hass)
 
     async def async_update_data():
